@@ -13,41 +13,80 @@ import utils
 
 # Caesar Cipher
 
-def encrypt_caesar(plaintext):
-    """Encrypt plaintext using a Caesar cipher.
 
-    Add more implementation details here.
-    """
-    raise NotImplementedError  # Your implementation here
+def encrypt_caesar(plaintext):
+    """Encrypt plaintext using a Caesar cipher."""
+    n = len(plaintext)
+    new_text = ""
+    for i in range(n):
+        if ord(plaintext[i]) > 64 and ord(plaintext[i]) < 91:
+            new_text = new_text + chr(((ord(plaintext[i]) - 65) + 3) % 26 + 65)
+        elif ord(plaintext[i]) > 96 and ord(plaintext[i]) < 123:
+            new_text = new_text + chr(((ord(plaintext[i]) - 97) + 3) % 26 + 97)
+        else:
+            new_text = new_text + plaintext[i]
+    return new_text
 
 
 def decrypt_caesar(ciphertext):
-    """Decrypt a ciphertext using a Caesar cipher.
-
-    Add more implementation details here.
-    """
-    raise NotImplementedError  # Your implementation here
+    """Decrypt a ciphertext using a Caesar cipher."""
+    n = len(ciphertext)
+    new_text = ""
+    for i in range(n):
+        if ord(ciphertext[i]) > 64 and ord(ciphertext[i]) < 91:
+            new_text = new_text + chr(((ord(ciphertext[i]) - 65) - 3) % 26 + 65)
+        elif ord(ciphertext[i]) > 96 and ord(ciphertext[i]) < 123:
+            new_text = new_text + chr(((ord(ciphertext[i]) - 97) - 3) % 26 + 97)
+        else:
+            new_text = new_text + ciphertext[i]
+    return new_text
 
 
 # Vigenere Cipher
 
-def encrypt_vigenere(plaintext, keyword):
-    """Encrypt plaintext using a Vigenere cipher with a keyword.
 
-    Add more implementation details here.
-    """
-    raise NotImplementedError  # Your implementation here
+def encrypt_vigenere(plaintext, keyword):
+    """Encrypt plaintext using a Vigenere cipher with a keyword."""
+
+    n = len(plaintext)
+    m = len(keyword)
+    new_text = ""
+    for i in range(n):
+        if ord(plaintext[i]) > 64 and ord(plaintext[i]) < 91:
+            new_text = new_text + chr(
+                ((ord(plaintext[i]) - 65) + (ord(keyword[i % m]) - 65)) % 26 + 65
+            )
+        elif ord(plaintext[i]) > 96 and ord(plaintext[i]) < 123:
+            new_text = new_text + chr(
+                ((ord(plaintext[i]) - 97) + (ord(keyword[i % m]) - 65)) % 26 + 97
+            )
+        else:
+            new_text = new_text + plaintext[i]
+    return new_text
 
 
 def decrypt_vigenere(ciphertext, keyword):
-    """Decrypt ciphertext using a Vigenere cipher with a keyword.
+    """Decrypt ciphertext using a Vigenere cipher with a keyword."""
 
-    Add more implementation details here.
-    """
-    raise NotImplementedError  # Your implementation here
+    n = len(ciphertext)
+    m = len(keyword)
+    new_text = ""
+    for i in range(n):
+        if ord(ciphertext[i]) > 64 and ord(ciphertext[i]) < 91:
+            new_text = new_text + chr(
+                ((ord(ciphertext[i]) - 65) - (ord(keyword[i % m]) - 65)) % 26 + 65
+            )
+        elif ord(ciphertext[i]) > 96 and ord(ciphertext[i]) < 123:
+            new_text = new_text + chr(
+                ((ord(ciphertext[i]) - 97) - (ord(keyword[i % m]) - 65)) % 26 + 97
+            )
+        else:
+            new_text = new_text + ciphertext[i]
+    return new_text
 
 
 # Merkle-Hellman Knapsack Cryptosystem
+
 
 def generate_private_key(n=8):
     """Generate a private key for use in the Merkle-Hellman Knapsack Cryptosystem.
@@ -70,6 +109,7 @@ def generate_private_key(n=8):
     @return 3-tuple `(w, q, r)`, with `w` a n-tuple, and q and r ints.
     """
     raise NotImplementedError  # Your implementation here
+
 
 def create_public_key(private_key):
     """Create a public key corresponding to the given private key.
@@ -108,6 +148,7 @@ def encrypt_mh(message, public_key):
     """
     raise NotImplementedError  # Your implementation here
 
+
 def decrypt_mh(message, private_key):
     """Decrypt an incoming message using a private key
 
@@ -128,3 +169,12 @@ def decrypt_mh(message, private_key):
     """
     raise NotImplementedError  # Your implementation here
 
+
+c_encrypted = encrypt_caesar("PYTHON:)xyz")
+print(c_encrypted)
+c_decrypted = decrypt_caesar("SBWKRQ:)abc")
+print(c_decrypted)
+v_encrypted = encrypt_vigenere("ATTACKATDAWN", "LEMON")
+print(v_encrypted)
+v_decrypted = decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
+print(v_decrypted)
