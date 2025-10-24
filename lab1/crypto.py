@@ -85,89 +85,106 @@ def decrypt_vigenere(ciphertext, keyword):
     return new_text
 
 
-# Merkle-Hellman Knapsack Cryptosystem
+def encrypt_scytale(plaintext, circumference):
+    n = len(plaintext)
+    new_text = ""
+    matrix = [[" " for _ in range(n)] for _ in range(circumference)]
+    i = 0
+    for j in range(n):
+        matrix[i][j] = plaintext[j]
+        i += 1
+        if (j + 1) % circumference == 0:
+            i = 0
+
+    for i in matrix:
+        print(i)
+    for i in range(circumference):
+        for j in range(n):
+            if matrix[i][j] != " ":
+                new_text = new_text + matrix[i][j]
+
+    return new_text
 
 
-def generate_private_key(n=8):
-    """Generate a private key for use in the Merkle-Hellman Knapsack Cryptosystem.
+def decrypt_scytale(ciphertext, circumference):
+    n = len(ciphertext)
+    new_text = ""
+    matrix = [[" " for _ in range(n)] for _ in range(circumference)]
+    i = 0
+    j = 0
+    for x in range(n):
+        matrix[i][j] = ciphertext[x]
+        if j + circumference >= n:
+            i += 1
+            j = i
+        else:
+            j += circumference
 
-    Following the instructions in the handout, construct the private key components
-    of the MH Cryptosystem. This consistutes 3 tasks:
+    for i in matrix:
+        print(i)
+    for j in range(n):
+        for i in range(circumference):
+            if matrix[i][j] != " ":
+                new_text = new_text + matrix[i][j]
 
-    1. Build a superincreasing sequence `w` of length n
-        (Note: you can check if a sequence is superincreasing with `utils.is_superincreasing(seq)`)
-    2. Choose some integer `q` greater than the sum of all elements in `w`
-    3. Discover an integer `r` between 2 and q that is coprime to `q` (you can use utils.coprime)
-
-    You'll need to use the random module for this function, which has been imported already
-
-    Somehow, you'll have to return all of these values out of this function! Can we do that in Python?!
-
-    @param n bitsize of message to send (default 8)
-    @type n int
-
-    @return 3-tuple `(w, q, r)`, with `w` a n-tuple, and q and r ints.
-    """
-    raise NotImplementedError  # Your implementation here
-
-
-def create_public_key(private_key):
-    """Create a public key corresponding to the given private key.
-
-    To accomplish this, you only need to build and return `beta` as described in the handout.
-
-        beta = (b_1, b_2, ..., b_n) where b_i = r × w_i mod q
-
-    Hint: this can be written in one line using a list comprehension
-
-    @param private_key The private key
-    @type private_key 3-tuple `(w, q, r)`, with `w` a n-tuple, and q and r ints.
-
-    @return n-tuple public key
-    """
-    raise NotImplementedError  # Your implementation here
+    return new_text
 
 
-def encrypt_mh(message, public_key):
-    """Encrypt an outgoing message using a public key.
+def encrypt_railfence(plaintext, num_rails):
+    n = len(plaintext)
+    new_text = ""
+    matrix = [[" " for _ in range(n)] for _ in range(num_rails)]
+    i = 0
+    k = -1
+    for j in range(n):
+        matrix[i][j] = plaintext[j]
+        if j % (num_rails - 1) == 0:
+            k = -k
+        i = i + k
 
-    1. Separate the message into chunks the size of the public key (in our case, fixed at 8)
-    2. For each byte, determine the 8 bits (the `a_i`s) using `utils.byte_to_bits`
-    3. Encrypt the 8 message bits by computing
-         c = sum of a_i * b_i for i = 1 to n
-    4. Return a list of the encrypted ciphertexts for each chunk in the message
+    for i in matrix:
+        print(i)
+    for i in range(num_rails):
+        for j in range(n):
+            if matrix[i][j] != " ":
+                new_text = new_text + matrix[i][j]
 
-    Hint: think about using `zip` at some point
-
-    @param message The message to be encrypted
-    @type message bytes
-    @param public_key The public key of the desired recipient
-    @type public_key n-tuple of ints
-
-    @return list of ints representing encrypted bytes
-    """
-    raise NotImplementedError  # Your implementation here
+    return new_text
 
 
-def decrypt_mh(message, private_key):
-    """Decrypt an incoming message using a private key
-
-    1. Extract w, q, and r from the private key
-    2. Compute s, the modular inverse of r mod q, using the
-        Extended Euclidean algorithm (implemented at `utils.modinv(r, q)`)
-    3. For each byte-sized chunk, compute
-         c' = cs (mod q)
-    4. Solve the superincreasing subset sum using c' and w to recover the original byte
-    5. Reconsitite the encrypted bytes to get the original message back
-
-    @param message Encrypted message chunks
-    @type message list of ints
-    @param private_key The private key of the recipient
-    @type private_key 3-tuple of w, q, and r
-
-    @return bytearray or str of decrypted characters
-    """
-    raise NotImplementedError  # Your implementation here
+def decrypt_railfence(ciphertext, num_rails):
+    n = len(ciphertext)
+    new_text = ""
+    matrix = [[" " for _ in range(n)] for _ in range(num_rails)]
+    i = 0
+    j = 0
+    k = 2 * num_rails - 2
+    l = 0
+    c = 0
+    for x in range(n):
+        matrix[i][j] = ciphertext[x]
+        if k == 2 * num_rails - 2:
+            j += k
+        elif k == 0:
+            j += l
+        else:
+            if c % 2 == 0:
+                j += k
+            else:
+                j += l
+            c += 1
+        if j + i > n - 1:
+            i += 1
+            j = i
+            k -= 2
+            l += 2
+    for i in matrix:
+        print(i)
+    for j in range(n):
+        for i in range(num_rails):
+            if matrix[i][j] != " ":
+                new_text = new_text + matrix[i][j]
+    return new_text
 
 
 c_encrypted = encrypt_caesar("PYTHON:)xyz")
@@ -178,3 +195,11 @@ v_encrypted = encrypt_vigenere("ATTACKATDAWN", "LEMON")
 print(v_encrypted)
 v_decrypted = decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
 print(v_decrypted)
+s_encrypted = encrypt_scytale("IAMHURTVERYBADLYHELP", 2)
+print(s_encrypted)
+s_decrypted = decrypt_scytale("IMUTEYALHLAHRVRBDYEP", 2)
+print(s_decrypted)
+r_encrypted = encrypt_railfence("WEAREDISCOVEREDFLEEATONCE", 4)
+print(r_encrypted)
+r_decrypted = decrypt_railfence("WIREEEDSEEEACAECVDLTNROFO", 4)
+print(r_decrypted)
