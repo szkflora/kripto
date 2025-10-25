@@ -48,6 +48,7 @@ def decrypt_caesar(ciphertext):
 def encrypt_vigenere(plaintext, keyword):
     """Encrypt plaintext using a Vigenere cipher with a keyword."""
 
+    keyword = keyword.upper()
     n = len(plaintext)
     m = len(keyword)
     new_text = ""
@@ -68,6 +69,7 @@ def encrypt_vigenere(plaintext, keyword):
 def decrypt_vigenere(ciphertext, keyword):
     """Decrypt ciphertext using a Vigenere cipher with a keyword."""
 
+    keyword = keyword.upper()
     n = len(ciphertext)
     m = len(keyword)
     new_text = ""
@@ -86,7 +88,14 @@ def decrypt_vigenere(ciphertext, keyword):
 
 
 def encrypt_scytale(plaintext, circumference):
+    if circumference == 1:
+        return plaintext
+
     n = len(plaintext)
+
+    if circumference >= n:
+        return plaintext
+
     new_text = ""
     matrix = [[" " for _ in range(n)] for _ in range(circumference)]
     i = 0
@@ -107,6 +116,14 @@ def encrypt_scytale(plaintext, circumference):
 
 
 def decrypt_scytale(ciphertext, circumference):
+    if circumference == 1:
+        return ciphertext
+
+    n = len(ciphertext)
+
+    if circumference >= n:
+        return ciphertext
+
     n = len(ciphertext)
     new_text = ""
     matrix = [[" " for _ in range(n)] for _ in range(circumference)]
@@ -131,7 +148,14 @@ def decrypt_scytale(ciphertext, circumference):
 
 
 def encrypt_railfence(plaintext, num_rails):
+    if num_rails == 1:
+        return plaintext
+
     n = len(plaintext)
+
+    if num_rails >= n:
+        return plaintext
+
     new_text = ""
     matrix = [[" " for _ in range(n)] for _ in range(num_rails)]
     i = 0
@@ -153,7 +177,14 @@ def encrypt_railfence(plaintext, num_rails):
 
 
 def decrypt_railfence(ciphertext, num_rails):
+    if num_rails == 1:
+        return ciphertext
+
     n = len(ciphertext)
+
+    if num_rails >= n:
+        return ciphertext
+
     new_text = ""
     matrix = [[" " for _ in range(n)] for _ in range(num_rails)]
     i = 0
@@ -173,11 +204,12 @@ def decrypt_railfence(ciphertext, num_rails):
             else:
                 j += l
             c += 1
-        if j + i > n - 1:
+        if j > n - 1:
             i += 1
             j = i
             k -= 2
             l += 2
+            c = 0
     for i in matrix:
         print(i)
     for j in range(n):
@@ -195,11 +227,11 @@ v_encrypted = encrypt_vigenere("ATTACKATDAWN", "LEMON")
 print(v_encrypted)
 v_decrypted = decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
 print(v_decrypted)
-s_encrypted = encrypt_scytale("IAMHURTVERYBADLYHELP", 2)
+s_encrypted = encrypt_scytale("IAMHURTVERYBADLYHELP", 20)
 print(s_encrypted)
 s_decrypted = decrypt_scytale("IMUTEYALHLAHRVRBDYEP", 2)
 print(s_decrypted)
-r_encrypted = encrypt_railfence("WEAREDISCOVEREDFLEEATONCE", 4)
+r_encrypted = encrypt_railfence("WEAREDISCOVEREDFLEEATONCE", 25)
 print(r_encrypted)
-r_decrypted = decrypt_railfence("WIREEEDSEEEACAECVDLTNROFO", 4)
+r_decrypted = decrypt_railfence("WVTEOEAOACRENRSEECEIDLEDF", 6)
 print(r_decrypted)
