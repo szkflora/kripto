@@ -1,0 +1,8 @@
+{
+  "block_size": 8,
+  "key": 1000,
+  "algorithm": "DES",
+  "mode": "ECB",
+  "IV": [],
+  "padding": "zero"
+}
