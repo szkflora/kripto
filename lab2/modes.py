@@ -2,6 +2,34 @@ from Crypto.Cipher import AES
 import numpy as np
 
 
+def my_enc(data, key):
+
+    data_array = np.frombuffer(data, dtype=np.uint8)
+    key_array = np.frombuffer(key, dtype=np.uint8)
+    data_len = len(data_array)
+    key_len = len(key_array)
+    shift_amount = key_len % data_len
+    shifted_data = np.roll(data_array, shift_amount)
+    key_stream = np.tile(key_array, data_len // key_len + 1)[:data_len]
+    ciphertext_array = np.bitwise_xor(shifted_data, key_stream)
+
+    return ciphertext_array.tobytes()
+
+
+def my_dec(ciphertext, key):
+
+    ciphertext_array = np.frombuffer(ciphertext, dtype=np.uint8)
+    key_array = np.frombuffer(key, dtype=np.uint8)
+    data_len = len(ciphertext_array)
+    key_len = len(key_array)
+    shift_amount = key_len % data_len
+    key_stream = np.tile(key_array, data_len // key_len + 1)[:data_len]
+    xored_data = np.bitwise_xor(ciphertext_array, key_stream)
+    decrypted_array = np.roll(xored_data, -shift_amount)
+
+    return decrypted_array.tobytes()
+
+
 def aes_enc(block, key):
     cipher = AES.new(key, AES.MODE_ECB)
     return cipher.encrypt(block)

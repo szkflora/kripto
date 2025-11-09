@@ -14,6 +14,8 @@ from modes import (
     ctr_dec,
     aes_enc,
     aes_dec,
+    my_enc,
+    my_dec,
 )
 
 FUNCS = {
@@ -32,6 +34,8 @@ FUNCS = {
     "ctr_dec": ctr_dec,
     "aes_enc": aes_enc,
     "aes_dec": aes_dec,
+    "my_enc": my_enc,
+    "my_dec": my_dec,
 }
 
 

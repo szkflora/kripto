@@ -2,7 +2,7 @@
   "block_size": 16,
   "key": "U2l4dGVlbiBieXRlIGtleQ==",
   "IV": "AAAAAAAAAAAAAAAAAAAAAA==",
-  "algorithm": "aes_enc",
-  "mode": "ctr_dec",
+  "algorithm": "my_enc",
+  "mode": "ofb_dec",
   "padding": "schneier_ferguson_pad"
 }
