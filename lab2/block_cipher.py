@@ -1,4 +1,5 @@
 import json
+import base64
 from paddings import pad, zero_pad, des_pad, schneier_ferguson_pad, unpad
 from modes import (
     ecb_enc,
@@ -11,6 +12,8 @@ from modes import (
     ofb_dec,
     ctr_enc,
     ctr_dec,
+    aes_enc,
+    aes_dec,
 )
 
 FUNCS = {
@@ -27,34 +30,34 @@ FUNCS = {
     "ofb_dec": ofb_dec,
     "ctr_enc": ctr_enc,
     "ctr_dec": ctr_dec,
+    "aes_enc": aes_enc,
+    "aes_dec": aes_dec,
 }
 
-config_file_path = "config.json"
 
-file = open(config_file_path, "r")
-config_data = json.load(file)
-
-block_size = config_data["block_size"]
-key = config_data["key"]
-algorithm = config_data["algorithm"]
-mode = config_data["mode"]
-IV = config_data["IV"]
-padding = config_data["padding"]
-
-print(block_size, key, algorithm, mode, IV, padding)
-
-file.close()
+def load_config():
+    config_file_path = "config.json"
+    file = open(config_file_path, "r")
+    cgf = json.load(file)
+    cgf["key"] = base64.b64decode(cgf["key"])
+    cgf["IV"] = base64.b64decode(cgf["IV"])
+    file.close()
+    return cgf
 
 
 def encrypt(plaintext):
-    padded_text = pad(plaintext, block_size, FUNCS[padding])
-    ciphertext = FUNCS[mode](padded_text, block_size, key, algorithm, IV)
+    cgf = load_config()
+    padded_text = pad(plaintext, cgf["block_size"], FUNCS[cgf["padding"]])
+    ciphertext = FUNCS[cgf["mode"]](
+        padded_text, cgf["block_size"], cgf["key"], FUNCS[cgf["algorithm"]], cgf["IV"]
+    )
     return ciphertext
 
 
 def decrypt(ciphertext):
-    #### other operations
-    #### got padded text from ciphertext
-    padded_text = FUNCS[mode](ciphertext, block_size, key, algorithm, IV)
-    unpadded_text = unpad(padded_text, padding)
+    cgf = load_config()
+    padded_text = FUNCS[cgf["mode"]](
+        ciphertext, cgf["block_size"], cgf["key"], FUNCS[cgf["algorithm"]], cgf["IV"]
+    )
+    unpadded_text = unpad(padded_text, cgf["padding"])
     return unpadded_text
