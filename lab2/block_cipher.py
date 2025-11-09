@@ -2,31 +2,31 @@ import json
 from paddings import pad, zero_pad, des_pad, schneier_ferguson_pad, unpad
 from modes import (
     ecb_enc,
-    ebc_dec,
+    ecb_dec,
     cbc_enc,
     cbc_dec,
     cfb_enc,
     cfb_dec,
     ofb_enc,
     ofb_dec,
-    crt_enc,
-    crt_dec,
+    ctr_enc,
+    ctr_dec,
 )
 
 FUNCS = {
     "zero_pad": zero_pad,
     "des_pad": des_pad,
     "schneier_ferguson_pad": schneier_ferguson_pad,
-    "ebc_enc": ecb_enc,
-    "ebc_dec": ebc_dec,
+    "ecb_enc": ecb_enc,
+    "ecb_dec": ecb_dec,
     "cbc_enc": cbc_enc,
     "cbc_dec": cbc_dec,
     "cfb_enc": cfb_enc,
     "cfb_dec": cfb_dec,
     "ofb_enc": ofb_enc,
     "ofb_dec": ofb_dec,
-    "crt_enc": crt_enc,
-    "crt_dec": crt_dec,
+    "ctr_enc": ctr_enc,
+    "ctr_dec": ctr_dec,
 }
 
 config_file_path = "config.json"
