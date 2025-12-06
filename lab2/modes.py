@@ -1,43 +1,4 @@
-from Crypto.Cipher import AES
 import numpy as np
-
-
-def my_enc(data, key):
-
-    data_array = np.frombuffer(data, dtype=np.uint8)
-    key_array = np.frombuffer(key, dtype=np.uint8)
-    data_len = len(data_array)
-    key_len = len(key_array)
-    shift_amount = key_len % data_len
-    shifted_data = np.roll(data_array, shift_amount)
-    key_stream = np.tile(key_array, data_len // key_len + 1)[:data_len]
-    ciphertext_array = np.bitwise_xor(shifted_data, key_stream)
-
-    return ciphertext_array.tobytes()
-
-
-def my_dec(ciphertext, key):
-
-    ciphertext_array = np.frombuffer(ciphertext, dtype=np.uint8)
-    key_array = np.frombuffer(key, dtype=np.uint8)
-    data_len = len(ciphertext_array)
-    key_len = len(key_array)
-    shift_amount = key_len % data_len
-    key_stream = np.tile(key_array, data_len // key_len + 1)[:data_len]
-    xored_data = np.bitwise_xor(ciphertext_array, key_stream)
-    decrypted_array = np.roll(xored_data, -shift_amount)
-
-    return decrypted_array.tobytes()
-
-
-def aes_enc(block, key):
-    cipher = AES.new(key, AES.MODE_ECB)
-    return cipher.encrypt(block)
-
-
-def aes_dec(block, key):
-    cipher = AES.new(key, AES.MODE_ECB)
-    return cipher.decrypt(block)
 
 
 def ecb_enc(plaintext, block_size, key, algorithm, IV=None):
@@ -55,17 +16,7 @@ def ecb_enc(plaintext, block_size, key, algorithm, IV=None):
 
 
 def ecb_dec(ciphertext, block_size, key, algorithm, IV=None):
-    num_blocks = len(ciphertext) // block_size
-    plaintext = bytearray(len(ciphertext))
-
-    for i in range(num_blocks):
-        start_poz = i * block_size
-        end_poz = start_poz + block_size
-        block = ciphertext[start_poz:end_poz]
-        encrypted_block = algorithm(block, key)
-        plaintext[start_poz:end_poz] = encrypted_block
-
-    return bytes(plaintext)
+    return ecb_enc(ciphertext, block_size, key, algorithm, IV)
 
 
 def xor_bytes(bytes1, bytes2):
@@ -179,20 +130,7 @@ def ofb_enc(plaintext, block_size, key, algorithm, IV):
 
 
 def ofb_dec(ciphertext, block_size, key, algorithm, IV):
-    num_blocks = len(ciphertext) // block_size
-    plaintext = bytearray(len(ciphertext))
-    previous_helper_block = IV
-
-    for i in range(num_blocks):
-        start_poz = i * block_size
-        end_poz = start_poz + block_size
-        block = ciphertext[start_poz:end_poz]
-        helper_block = algorithm(previous_helper_block, key)
-        decrypted_block = xor_bytes(block, helper_block)
-        previous_helper_block = helper_block
-        plaintext[start_poz:end_poz] = decrypted_block
-
-    return bytes(plaintext)
+    return ofb_enc(ciphertext, block_size, key, algorithm, IV)
 
 
 def ctr_enc(plaintext, block_size, key, algorithm, IV):
@@ -213,17 +151,4 @@ def ctr_enc(plaintext, block_size, key, algorithm, IV):
 
 
 def ctr_dec(ciphertext, block_size, key, algorithm, IV):
-    num_blocks = len(ciphertext) // block_size
-    plaintext = bytearray(len(ciphertext))
-    counter = complement_bytes(IV, block_size)
-
-    for i in range(num_blocks):
-        start_poz = i * block_size
-        end_poz = start_poz + block_size
-        block = ciphertext[start_poz:end_poz]
-        helper_block = algorithm(counter, key)
-        decrypted_block = xor_bytes(block, helper_block)
-        counter = increment_counter(counter)
-        plaintext[start_poz:end_poz] = decrypted_block
-
-    return bytes(plaintext)
+    return ctr_enc(ciphertext, block_size, key, algorithm, IV)
