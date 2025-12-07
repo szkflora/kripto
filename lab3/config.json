@@ -1,0 +1,9 @@
+{
+    "mode": "ecb_enc",
+    "algorithm": "aes_enc",
+    "dalgorithm": "aes_dec",
+    "padding": "schneier_ferguson_pad",
+    "block_size": 16,
+    "key": "E0DK6nRthpt5jbUT7z+JGQ==",
+    "IV": "+M+V5VJpCCB0K6QS7EMj4Q=="
+}
